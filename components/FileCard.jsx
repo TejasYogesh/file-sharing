@@ -32,7 +32,7 @@ function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
-export default function FileCard({ file, bucketId, onDelete, onCopy, copied, isMobile }) {
+export default function FileCard({ file, bucketId, onDelete, onCopy, copied }) {
   const isImage = file.mimeType?.startsWith("image/");
 
   function handleDownload() {
@@ -40,57 +40,6 @@ export default function FileCard({ file, bucketId, onDelete, onCopy, copied, isM
     window.open(url, "_blank");
   }
 
-  // Mobile: horizontal list item layout
-  if (isMobile) {
-    return (
-      <div style={styles.mobileCard}>
-        {/* Left: icon or thumbnail */}
-        <div style={styles.mobileThumb}>
-          {isImage ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={storage.getFilePreview(bucketId, file.$id, 80, 80)}
-              alt={file.name}
-              style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 8 }}
-            />
-          ) : (
-            <span style={{ fontSize: "1.8rem" }}>{getIcon(file.mimeType)}</span>
-          )}
-        </div>
-
-        {/* Middle: info */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={styles.name} title={file.name}>{file.name}</div>
-          <div style={styles.meta}>
-            <span>{formatSize(file.sizeOriginal)}</span>
-            <span style={{ color: "var(--border)" }}>·</span>
-            <span>{formatDate(file.$createdAt)}</span>
-          </div>
-          {/* Inline actions on mobile */}
-          <div style={{ display: "flex", gap: "0.4rem", marginTop: "0.5rem", flexWrap: "wrap" }}>
-            <button
-              onClick={onCopy}
-              style={{
-                ...styles.actionBtn,
-                background: copied ? "rgba(77,250,158,0.15)" : "var(--surface2)",
-                color: copied ? "var(--success)" : "var(--muted)",
-                borderColor: copied ? "var(--success)" : "var(--border)",
-                flex: "none",
-              }}
-            >
-              {copied ? "✓" : "🔗"} {copied ? "Copied!" : "Share"}
-            </button>
-            <button onClick={handleDownload} style={{ ...styles.actionBtn, flex: "none" }}>
-              ⬇ Download
-            </button>
-            <button className="btn-danger" onClick={onDelete}>🗑</button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Desktop: card layout
   return (
     <div style={styles.card}>
       {/* Preview or icon */}
@@ -143,7 +92,6 @@ export default function FileCard({ file, bucketId, onDelete, onCopy, copied, isM
 }
 
 const styles = {
-  // Desktop card
   card: {
     background: "var(--surface)",
     border: "1px solid var(--border)",
@@ -184,23 +132,5 @@ const styles = {
     fontWeight: 600,
     transition: "all 0.2s",
     whiteSpace: "nowrap",
-  },
-
-  // Mobile list item
-  mobileCard: {
-    display: "flex",
-    alignItems: "center",
-    gap: "0.9rem",
-    background: "var(--surface)",
-    border: "1px solid var(--border)",
-    borderRadius: 14,
-    padding: "0.9rem 1rem",
-  },
-  mobileThumb: {
-    width: 56, height: 56, flexShrink: 0,
-    background: "var(--surface2)",
-    borderRadius: 10,
-    display: "flex", alignItems: "center", justifyContent: "center",
-    overflow: "hidden",
   },
 };

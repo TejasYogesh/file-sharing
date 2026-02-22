@@ -16,17 +16,7 @@ export default function Dashboard() {
   const [dragOver, setDragOver] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [copiedId, setCopiedId] = useState(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const fileInputRef = useRef(null);
-
-  // Detect mobile
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
 
   // Redirect if not logged in
   useEffect(() => {
@@ -110,95 +100,41 @@ export default function Dashboard() {
 
   return (
     <div style={styles.root}>
-
-      {/* ── Mobile top navbar ── */}
-      {isMobile && (
-        <header style={styles.mobileNav}>
-          <div style={styles.sidebarLogo}>
-            <span style={{ color: "var(--accent)", fontSize: "1.3rem" }}>⬡</span>
-            <span style={{ fontWeight: 800, letterSpacing: "-0.02em" }}>FileVault</span>
-          </div>
-          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-            <button className="btn-primary" onClick={() => fileInputRef.current?.click()} disabled={uploading}
-              style={{ padding: "0.5rem 0.9rem", fontSize: "0.82rem" }}>
-              {uploading ? <span className="spinner" /> : "+ Upload"}
-            </button>
-            <button onClick={() => setMobileMenuOpen(o => !o)} style={styles.hamburger}>
-              {mobileMenuOpen ? "✕" : "☰"}
-            </button>
-          </div>
-        </header>
-      )}
-
-      {/* ── Mobile slide-down menu ── */}
-      {isMobile && mobileMenuOpen && (
-        <div style={styles.mobileMenu}>
-          <div style={styles.mobileMenuItem}>📁 My Files</div>
-          <div style={styles.mobileDivider} />
-          <div style={styles.mobileUser}>
-            <div style={styles.avatar}>{user.name?.[0]?.toUpperCase() || "U"}</div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: 600, fontSize: "0.9rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.name}</div>
-              <div style={{ color: "var(--muted)", fontSize: "0.75rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.email}</div>
-            </div>
-            <button className="btn-ghost" onClick={handleLogout} style={{ padding: "0.4rem 0.8rem", fontSize: "0.8rem", flexShrink: 0 }}>
-              Sign out
-            </button>
-          </div>
+      {/* Sidebar */}
+      <aside style={styles.sidebar}>
+        <div style={styles.sidebarLogo}>
+          <span style={{ color: "var(--accent)", fontSize: "1.4rem" }}>⬡</span>
+          <span style={{ fontWeight: 800, letterSpacing: "-0.02em" }}>FileVault</span>
         </div>
-      )}
-
-      {/* ── Desktop Sidebar ── */}
-      {!isMobile && (
-        <aside style={styles.sidebar}>
-          <div style={styles.sidebarLogo}>
-            <span style={{ color: "var(--accent)", fontSize: "1.4rem" }}>⬡</span>
-            <span style={{ fontWeight: 800, letterSpacing: "-0.02em" }}>FileVault</span>
+        <nav style={styles.nav}>
+          <div style={styles.navItem}>
+            <span>📁</span> My Files
           </div>
-          <nav style={styles.nav}>
-            <div style={styles.navItem}>
-              <span>📁</span> My Files
-            </div>
-          </nav>
-          <div style={styles.userSection}>
-            <div style={styles.avatar}>{user.name?.[0]?.toUpperCase() || "U"}</div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: 600, fontSize: "0.9rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.name}</div>
-              <div style={{ color: "var(--muted)", fontSize: "0.75rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.email}</div>
-            </div>
-            <button className="btn-ghost" onClick={handleLogout} style={{ padding: "0.4rem 0.7rem", fontSize: "0.75rem" }}>
-              Out
-            </button>
+        </nav>
+        <div style={styles.userSection}>
+          <div style={styles.avatar}>{user.name?.[0]?.toUpperCase() || "U"}</div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontWeight: 600, fontSize: "0.9rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.name}</div>
+            <div style={{ color: "var(--muted)", fontSize: "0.75rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.email}</div>
           </div>
-        </aside>
-      )}
+          <button className="btn-ghost" onClick={handleLogout} style={{ padding: "0.4rem 0.7rem", fontSize: "0.75rem" }}>
+            Out
+          </button>
+        </div>
+      </aside>
 
-      {/* ── Main content ── */}
-      <main style={{ ...styles.main, padding: isMobile ? "1rem" : "2rem" }}>
-
-        {/* Desktop header */}
-        {!isMobile && (
-          <div style={styles.header}>
-            <div>
-              <h1 style={styles.heading}>My Files</h1>
-              <p style={{ color: "var(--muted)", fontSize: "0.9rem" }}>{files.length} file{files.length !== 1 ? "s" : ""} uploaded</p>
-            </div>
-            <button className="btn-primary" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
-              {uploading ? <><span className="spinner" /> Uploading...</> : "+ Upload File"}
-            </button>
-            <input ref={fileInputRef} type="file" style={{ display: "none" }} onChange={e => uploadFile(e.target.files[0])} />
+      {/* Main content */}
+      <main style={styles.main}>
+        <div style={styles.header}>
+          <div>
+            <h1 style={styles.heading}>My Files</h1>
+            <p style={{ color: "var(--muted)", fontSize: "0.9rem" }}>{files.length} file{files.length !== 1 ? "s" : ""} uploaded</p>
           </div>
-        )}
-
-        {/* Mobile file count */}
-        {isMobile && (
-          <div style={{ marginBottom: "1rem", marginTop: "0.5rem" }}>
-            <h1 style={{ ...styles.heading, fontSize: "1.5rem" }}>My Files</h1>
-            <p style={{ color: "var(--muted)", fontSize: "0.85rem" }}>{files.length} file{files.length !== 1 ? "s" : ""} uploaded</p>
-          </div>
-        )}
-
-        <input ref={fileInputRef} type="file" style={{ display: "none" }} onChange={e => uploadFile(e.target.files[0])} />
+          <button className="btn-primary" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+            {uploading ? <><span className="spinner" /> Uploading...</> : "+ Upload File"}
+          </button>
+          <input ref={fileInputRef} type="file" style={{ display: "none" }} onChange={e => uploadFile(e.target.files[0])} />
+        </div>
 
         {/* Upload progress */}
         {uploading && (
@@ -207,23 +143,17 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Drop zone — simplified on mobile (no drag/drop on touch) */}
+        {/* Drop zone */}
         <div
-          style={{
-            ...styles.dropzone,
-            ...(dragOver ? styles.dropzoneActive : {}),
-            padding: isMobile ? "1.2rem" : "2rem",
-          }}
+          style={{ ...styles.dropzone, ...(dragOver ? styles.dropzoneActive : {}) }}
           onDragOver={e => { e.preventDefault(); setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
         >
-          <span style={{ fontSize: isMobile ? "1.5rem" : "2rem" }}>⬆</span>
-          <p style={{ fontWeight: 600, fontSize: isMobile ? "0.9rem" : "1rem" }}>
-            {isMobile ? "Tap to upload a file" : "Drop a file here or click to upload"}
-          </p>
-          <p style={{ color: "var(--muted)", fontSize: "0.82rem" }}>Any file type · Max 50MB</p>
+          <span style={{ fontSize: "2rem" }}>⬆</span>
+          <p style={{ fontWeight: 600 }}>Drop a file here or click to upload</p>
+          <p style={{ color: "var(--muted)", fontSize: "0.85rem" }}>Any file type · Max 50MB</p>
         </div>
 
         {/* File grid */}
@@ -237,10 +167,7 @@ export default function Dashboard() {
             <p style={{ fontSize: "1.1rem" }}>No files yet. Upload your first file!</p>
           </div>
         ) : (
-          <div style={{
-            ...styles.grid,
-            gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(260px, 1fr))",
-          }}>
+          <div style={styles.grid}>
             {files.map((file, i) => (
               <div key={file.$id} className="fade-up" style={{ animationDelay: `${i * 0.05}s`, opacity: 0 }}>
                 <FileCard
@@ -249,7 +176,6 @@ export default function Dashboard() {
                   onDelete={() => deleteFile(file.$id)}
                   onCopy={() => copyShareLink(file.$id)}
                   copied={copiedId === file.$id}
-                  isMobile={isMobile}
                 />
               </div>
             ))}
@@ -261,38 +187,7 @@ export default function Dashboard() {
 }
 
 const styles = {
-  root: { display: "flex", minHeight: "100vh", flexDirection: "row", alignItems: "flex-start" },
-
-  // Mobile top navbar
-  mobileNav: {
-    display: "flex", alignItems: "center", justifyContent: "space-between",
-    padding: "0.9rem 1rem",
-    background: "var(--surface)",
-    borderBottom: "1px solid var(--border)",
-    position: "sticky", top: 0, zIndex: 100,
-  },
-  hamburger: {
-    background: "var(--surface2)", border: "1px solid var(--border)",
-    color: "var(--text)", width: 38, height: 38, borderRadius: 10,
-    fontSize: "1.1rem", cursor: "pointer", display: "flex",
-    alignItems: "center", justifyContent: "center", fontFamily: "'Syne', sans-serif",
-  },
-  mobileMenu: {
-    background: "var(--surface)",
-    borderBottom: "1px solid var(--border)",
-    padding: "0.5rem 1rem 1rem",
-    zIndex: 99,
-  },
-  mobileMenuItem: {
-    display: "flex", alignItems: "center", gap: "0.7rem",
-    padding: "0.7rem 1rem", borderRadius: 10,
-    background: "var(--surface2)", border: "1px solid var(--border)",
-    fontSize: "0.9rem", fontWeight: 600, marginBottom: "0.8rem",
-  },
-  mobileDivider: { height: 1, background: "var(--border)", margin: "0.5rem 0 0.8rem" },
-  mobileUser: { display: "flex", alignItems: "center", gap: "0.7rem" },
-
-  // Desktop sidebar
+  root: { display: "flex", minHeight: "100vh" },
   sidebar: {
     width: 240,
     background: "var(--surface)",
@@ -320,9 +215,7 @@ const styles = {
     alignItems: "center", justifyContent: "center",
     fontWeight: 700, fontSize: "0.9rem", flexShrink: 0,
   },
-
-  // Main area
-  main: { flex: 1, maxWidth: 900, width: "100%" },
+  main: { flex: 1, padding: "2rem", maxWidth: 900 },
   header: { display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "1.5rem", gap: "1rem" },
   heading: { fontSize: "2rem", fontWeight: 800, letterSpacing: "-0.04em" },
   progressBar: { height: 4, background: "var(--surface2)", borderRadius: 4, marginBottom: "1rem", overflow: "hidden" },
@@ -330,12 +223,13 @@ const styles = {
   dropzone: {
     border: "2px dashed var(--border)",
     borderRadius: 16,
+    padding: "2rem",
     textAlign: "center",
     cursor: "pointer",
-    marginBottom: "1.5rem",
+    marginBottom: "2rem",
     transition: "all 0.2s",
     display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem",
   },
   dropzoneActive: { borderColor: "var(--accent)", background: "rgba(124,109,250,0.05)" },
-  grid: { display: "grid", gap: "1rem" },
+  grid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "1rem" },
 };
