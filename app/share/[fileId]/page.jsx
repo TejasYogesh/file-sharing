@@ -96,8 +96,8 @@ export default function SharePage() {
 
 const styles = {
   page: { minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "2rem", position: "relative" },
-  glow: { position: "absolute", width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, rgba(124,109,250,0.1) 0%, transparent 70%)", top: "50%", left: "50%", transform: "translate(-50%, -50%)", pointerEvents: "none" },
-  box: { width: "100%", maxWidth: 500, background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 20, padding: "2.5rem", position: "relative", zIndex: 1 },
+  glow: { position: "absolute", height: 600, borderRadius: "50%", background: "radial-gradient(circle, rgba(124,109,250,0.1) 0%, transparent 70%)", top: "50%", left: "50%", transform: "translate(-50%, -50%)", pointerEvents: "none" },
+  box: { width: "100%", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 20, padding: "2.5rem", position: "relative", zIndex: 1 },
   logo: { display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "2rem", fontWeight: 800, fontSize: "1.1rem" },
   sharedTag: { display: "inline-block", background: "rgba(124,109,250,0.15)", color: "var(--accent)", padding: "0.25rem 0.8rem", borderRadius: 20, fontSize: "0.78rem", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: "0.8rem" },
   fileName: { fontSize: "1.4rem", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "0.4rem", wordBreak: "break-word" },
